@@ -3,7 +3,7 @@ package org.inspection;
 
 import org.inspection.element.*;
 import org.inspection.visitor.SecurityAuditVisitor;
-
+import org.inspection.visitor.ProjectStatisticsVisitor;
 import java.util.List;
 
 public class Main {
@@ -48,5 +48,15 @@ public class Main {
         project.accept(security);
 
         security.printReport();
+
+        System.out.println();
+
+        ProjectStatisticsVisitor statistics =
+                new ProjectStatisticsVisitor();
+
+        project.accept(statistics);
+
+        statistics.printReport();
+
     }
 }
