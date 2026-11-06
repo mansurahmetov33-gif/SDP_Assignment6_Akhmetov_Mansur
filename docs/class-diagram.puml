@@ -1,0 +1,91 @@
+
+@startuml
+title Smart Code Inspection - Class Diagram
+
+skinparam classAttributeIconSize 0
+left to right direction
+
+package "element" {
+    interface ProjectElement {
+        +accept(visitor: ProjectVisitor): void
+    }
+
+    class SourceCodeFile {
+        -name: String
+        -linesOfCode: int
+        -complexity: int
+        -hardcodedCredentials: boolean
+        -highRisk: boolean
+        +accept(visitor: ProjectVisitor): void
+    }
+
+    class TestFile {
+        -name: String
+        -linesOfCode: int
+        -testCount: int
+        -targetClass: String
+        +accept(visitor: ProjectVisitor): void
+    }
+
+    class ConfigurationFile {
+        -name: String
+        -debugEnabled: boolean
+        -encryptionEnabled: boolean
+        -exposedCredentials: boolean
+        +accept(visitor: ProjectVisitor): void
+    }
+
+    class DependencyFile {
+        -name: String
+        -dependencies: List<String>
+        -vulnerableDependencies: boolean
+        -missingVersions: boolean
+        -prohibitedDependencies: boolean
+        +accept(visitor: ProjectVisitor): void
+    }
+
+    class Directory {
+        -name: String
+        -children: List<ProjectElement>
+        +add(element: ProjectElement): void
+        +accept(visitor: ProjectVisitor): void
+    }
+
+    ProjectElement <|.. SourceCodeFile
+    ProjectElement <|.. TestFile
+    ProjectElement <|.. ConfigurationFile
+    ProjectElement <|.. DependencyFile
+    ProjectElement <|.. Directory
+
+    Directory "1" o-- "0..*" ProjectElement : children
+}
+
+package "visitor" {
+    interface ProjectVisitor {
+        +visit(file: SourceCodeFile): void
+        +visit(file: TestFile): void
+        +visit(file: ConfigurationFile): void
+        +visit(file: DependencyFile): void
+        +visit(directory: Directory): void
+    }
+
+    class SecurityAuditVisitor
+    class ProjectStatisticsVisitor
+    class QualityGateVisitor
+    class ComplianceVisitor
+    class TechnicalDebtVisitor
+
+    ProjectVisitor <|.. SecurityAuditVisitor
+    ProjectVisitor <|.. ProjectStatisticsVisitor
+    ProjectVisitor <|.. QualityGateVisitor
+    ProjectVisitor <|.. ComplianceVisitor
+    ProjectVisitor <|.. TechnicalDebtVisitor
+
+    QualityGateVisitor *-- SecurityAuditVisitor
+    QualityGateVisitor *-- ProjectStatisticsVisitor
+}
+
+ProjectElement ..> ProjectVisitor : accept()
+ProjectVisitor ..> ProjectElement : visit()
+
+@enduml

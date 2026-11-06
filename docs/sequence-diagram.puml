@@ -1,0 +1,37 @@
+
+@startuml
+title Visitor Pattern - Sequence Diagram
+
+actor User
+participant Main
+participant "payment: SourceCodeFile" as File
+participant "security: SecurityAuditVisitor" as Visitor
+
+User -> Main : Run application
+activate Main
+
+Main -> File : accept(security)
+activate File
+
+File -> Visitor : visit(this)
+activate Visitor
+
+Visitor -> Visitor : hasHardcodedCredentials()
+Visitor -> Visitor : Add security issue
+Visitor -> Visitor : Increment criticalIssues
+
+Visitor --> File : return
+deactivate Visitor
+
+File --> Main : return
+deactivate File
+
+Main -> Visitor : printReport()
+activate Visitor
+Visitor --> Main : Security report
+deactivate Visitor
+
+Main --> User : Display results
+deactivate Main
+
+@enduml
