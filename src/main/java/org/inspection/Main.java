@@ -4,6 +4,8 @@ package org.inspection;
 import org.inspection.element.*;
 import org.inspection.visitor.SecurityAuditVisitor;
 import org.inspection.visitor.ProjectStatisticsVisitor;
+import org.inspection.visitor.QualityGateVisitor;
+import org.inspection.visitor.ComplianceVisitor;
 import java.util.List;
 
 public class Main {
@@ -57,6 +59,25 @@ public class Main {
         project.accept(statistics);
 
         statistics.printReport();
+
+        System.out.println();
+
+        QualityGateVisitor quality = new QualityGateVisitor();
+
+        project.accept(quality);
+
+        quality.printReport();
+
+
+
+        System.out.println();
+
+        ComplianceVisitor compliance = new ComplianceVisitor();
+
+        project.accept(compliance);
+
+        compliance.printReport();
+
 
     }
 }
