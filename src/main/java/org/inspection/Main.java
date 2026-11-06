@@ -6,6 +6,7 @@ import org.inspection.visitor.SecurityAuditVisitor;
 import org.inspection.visitor.ProjectStatisticsVisitor;
 import org.inspection.visitor.QualityGateVisitor;
 import org.inspection.visitor.ComplianceVisitor;
+import org.inspection.visitor.TechnicalDebtVisitor;
 import java.util.List;
 
 public class Main {
@@ -79,5 +80,13 @@ public class Main {
         compliance.printReport();
 
 
+
+        System.out.println();
+
+        TechnicalDebtVisitor debt = new TechnicalDebtVisitor();
+
+        project.accept(debt);
+
+        debt.printReport();
     }
 }
